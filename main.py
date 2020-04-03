@@ -1,5 +1,5 @@
-from startbutton import StartButton
-from water import WaterPump
+from startbutton import StartButton #button start water system class
+from water import WaterPump #water pump and soil sensor class
 import time
 import RPi.GPIO as GPIO
 
@@ -16,8 +16,10 @@ waterpump = WaterPump()
 while True:
 	time.sleep(1)
 	Stbtn.checkstartbutton()
-	print(Stbtn.startstate)
+	print("startButton", Stbtn.startstate)
 	if Stbtn.startstate:
                 waterpump.checkstartwater()
-			
+	else:
+		waterpump.stoppump()
+	print("END")			
 

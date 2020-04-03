@@ -14,47 +14,54 @@ class WaterPump(object):
         channeloutrele = 4 
         countpump = 0
         countcheck = 0
-        countpumptotal = 2
-        countchecktotal = 5
-        setcheck = True
-        setpump = False
+        countpumptotal = 2 #pumping time
+        countchecktotal = 180 #check waitinig time after pump
+        setcheck = True  #bolean to check soil sensor (after pumping delay before checking thee sensor again
+        setpump = False #bolean to start the pump
 
         def __init__(self):
 		GPIO.setmode(GPIO.BCM)
                 GPIO.setup(self.channelsoilmoist, GPIO.IN)
                 GPIO.setup(self.channeloutrele, GPIO.OUT)
-                GPIO.output(self.channeloutrele,GPIO.HIGH)
+                GPIO.output(self.channeloutrele,GPIO.HIGH) #swichoff pump at startup
 
-        #infinite loop
-        #while True:
-        #	time.sleep(1)
         
         def checkstartwater(self):        
                 if self.setcheck == False:
                         self.countcheck += 1
                         print("time check: ", self.countcheck)
                         if self.setpump == True:
-                                GPIO.output(self.channeloutrele,GPIO.HIGH )
-                                self.countpump += 1
+                                #GPIO.output(self.channeloutrele,GPIO.LOW)
+                                self.startpump()
+				self.countpump += 1
                                 print("time pump: ", self.countpump)
                                 if self.countpump >=  self.countpumptotal:
                                         self.countpump = 0
                                         self.setpump = False
                         else:
-                                GPIO.output(self.channeloutrele,GPIO.LOW)
-                                if self.countcheck >=  self.countchecktotal:
+                                #GPIO.output(self.channeloutrele,GPIO.HIGH)
+                                self.stoppump()
+				if self.countcheck >=  self.countchecktotal:
                                         self.countcheck = 0
                                         self.setcheck = True
-                else:                                   	
+                else: #check soil sensor enable                                  	
                         if GPIO.input(self.channelsoilmoist):
                                 self.setcheck = False
                                 self.setpump = True
                                 print("no water detected\n")
-                                GPIO.output(self.channeloutrele,1 )
+#                                GPIO.output(self.channeloutrele,GPIO.LOW )
                                 print("pumping water\n")
+				self.startpump()
                         else:
                                 self.setcheck = True
-                                self.setpump = False
+                                #self.setpump = False
                                 print("water detected")
-                                GPIO.output(self.channeloutrele,0)
+				self.stoppump()
+#                                GPIO.output(self.channeloutrele,GPIO.HIGH)
                 
+	def stoppump(self):
+		self.setpump = False
+		GPIO.output(self.channeloutrele, GPIO.HIGH)
+
+	def startpump(self):
+		GPIO.output(self.channeloutrele, GPIO.LOW)

@@ -18,7 +18,7 @@ class StartButton(object):
 
 			button_state = GPIO.input(23)
 			if button_state == False:
-				print("Button pressed!")
+#				print("Button pressed!")
 				if self.startstate == False:
 					GPIO.output(24, True)
 					print("start!")
@@ -27,8 +27,8 @@ class StartButton(object):
 					GPIO.output(24,False)
 					print("stop!")
 					self.startstate = False
-			else:
-				print("Button NOT pressed!")
+#			else:
+#				print("Button NOT pressed!")
 			return 1;
 		except:
 			print("Exception..Cleaning GPIO")
