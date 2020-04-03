@@ -2,49 +2,59 @@ import RPi.GPIO as GPIO
 import time
 
 #GPIO SETUP
-channelsoilmoist = 21
-channeloutrele = 20 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(channelsoilmoist, GPIO.IN)
-GPIO.setup(channeloutrele, GPIO.OUT)
-GPIO.output(channeloutrele,0)
 
-countpump = 0
-countcheck = 0
-countpumptotal = 5
-countchecktotal = 180
-setcheck = True
-setpump = False
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(channelsoilmoist, GPIO.IN)
+#GPIO.setup(channeloutrele, GPIO.OUT)
+#GPIO.output(channeloutrele,0)
 
-#infinite loop
-while True:
-	time.sleep(1)
-	
-	if setcheck == False:
-                countcheck += 1
-                print("time check: ", countcheck)
-                if setpump == True:
-                        GPIO.output(channeloutrele,1 )
-                        countpump += 1
-                        print("time pump: ", countpump)
-                        if countpump >=  countpumptotal:
-                                countpump = 0
-                                setpump = False
-                else:
-                        GPIO.output(channeloutrele,0)
-                        if countcheck >=  countchecktotal:
-                                countcheck = 0
-                                setcheck = True
-        else:                                   	
-		if GPIO.input(channelsoilmoist):
-			setcheck = False
-			setpump = True
-			print("no water detected\n")
-			GPIO.output(channeloutrele,1 )
-			print("pumping water\n")
-		else:
-                        setcheck = True
-			setpump = False
-			print("water detected")
-			GPIO.output(channeloutrele,0)
-	
+class WaterPump(object):
+
+        channelsoilmoist = 21
+        channeloutrele = 4 
+        countpump = 0
+        countcheck = 0
+        countpumptotal = 2
+        countchecktotal = 5
+        setcheck = True
+        setpump = False
+
+        def __init__(self):
+		GPIO.setmode(GPIO.BCM)
+                GPIO.setup(self.channelsoilmoist, GPIO.IN)
+                GPIO.setup(self.channeloutrele, GPIO.OUT)
+                GPIO.output(self.channeloutrele,GPIO.HIGH)
+
+        #infinite loop
+        #while True:
+        #	time.sleep(1)
+        
+        def checkstartwater(self):        
+                if self.setcheck == False:
+                        self.countcheck += 1
+                        print("time check: ", self.countcheck)
+                        if self.setpump == True:
+                                GPIO.output(self.channeloutrele,GPIO.HIGH )
+                                self.countpump += 1
+                                print("time pump: ", self.countpump)
+                                if self.countpump >=  self.countpumptotal:
+                                        self.countpump = 0
+                                        self.setpump = False
+                        else:
+                                GPIO.output(self.channeloutrele,GPIO.LOW)
+                                if self.countcheck >=  self.countchecktotal:
+                                        self.countcheck = 0
+                                        self.setcheck = True
+                else:                                   	
+                        if GPIO.input(self.channelsoilmoist):
+                                self.setcheck = False
+                                self.setpump = True
+                                print("no water detected\n")
+                                GPIO.output(self.channeloutrele,1 )
+                                print("pumping water\n")
+                        else:
+                                self.setcheck = True
+                                self.setpump = False
+                                print("water detected")
+                                GPIO.output(self.channeloutrele,0)
+                
