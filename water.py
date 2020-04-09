@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import datetime
 
 #GPIO SETUP
 
@@ -10,23 +11,37 @@ import time
 
 class WaterPump(object):
 
+	pumpingtime = 0
         channelsoilmoist = 21
         channeloutrele = 4 
         countpump = 0
         countcheck = 0
-        countpumptotal = 2 #pumping time
-        countchecktotal = 180 #check waitinig time after pump
+        countpumptotal = 1  #pumping time x 0.5 sec
+        countchecktotal =360  #check waitinig time after pump x 0.5 sec
         setcheck = True  #bolean to check soil sensor (after pumping delay before checking thee sensor again
         setpump = False #bolean to start the pump
+#	f= open("data.txt","w+")
+
+
 
         def __init__(self):
 		GPIO.setmode(GPIO.BCM)
                 GPIO.setup(self.channelsoilmoist, GPIO.IN)
                 GPIO.setup(self.channeloutrele, GPIO.OUT)
                 GPIO.output(self.channeloutrele,GPIO.HIGH) #swichoff pump at startup
+#		now = datetime.datetime.now()
+#                self.f.write(str(now.hour) + str(now.minute))
+#                self.f.write(" ")
+#                self.f.write("%d\r\n"%self.pumpingtime)
+#		print("WRITE!")
 
-        
-        def checkstartwater(self):        
+
+	def __del__(self):
+ 		f.close()
+	    
+        def checkstartwater(self):
+
+              
                 if self.setcheck == False:
                         self.countcheck += 1
                         print("time check: ", self.countcheck)
@@ -65,3 +80,9 @@ class WaterPump(object):
 
 	def startpump(self):
 		GPIO.output(self.channeloutrele, GPIO.LOW)
+		self.pumpingtime += 1
+		#write data on file
+#		now = datetime.datetime.now()
+#                self.f.write(str(now.hour) + str(now.minute))
+#                self.f.write(" ")
+#                self.f.write("%d\r\n"%self.pumpingtime)
