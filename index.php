@@ -29,7 +29,7 @@
             //  $value =  $line ."\n";
               // line is "word1", "word2", "word3", etc.
               //echo $value;
-              $valueint = intval($value);
+              $valuefloat =intval( $value);
          }
 
 
@@ -80,7 +80,8 @@
 		text: "Water pump monitor"
 	},
 	axisY:{
-		includeZero: false
+		includeZero: false,
+		minimum: 0
 	},
 	data: [{        
 		type: "line",

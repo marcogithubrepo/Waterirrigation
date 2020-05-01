@@ -1,3 +1,4 @@
+
 from startbutton import StartButton #button start water system class
 from water import WaterPump #water pump and soil sensor class
 from savedata import SaveData #Write data to file class
@@ -19,17 +20,15 @@ while True:
 	print("startButton", Stbtn.startstate)
 
 	#check startbuttonstatus
-	if Stbtn.startstate:
-        	waterpump.checkstartwater()
-	else:
-		waterpump.stoppump()
+#	if Stbtn.startstate:
+	waterpump.checkstartwater()
+#	else:
+#		waterpump.stoppump()
 	#write plot data
-	if( (count  %  600  == 0) or (count == 0)):
-		print(count)
-                Savedt.writedata(waterpump.pumpingtime)
-	
-	count+=1                
 
-
-
+	if((count  % 6  == 0) or (count == 0)):
+		print("savingdata")
+		Savedt.writedata(waterpump.waterpercentage)
+		print(waterpump.waterpercentage)
+	count+=1
 
